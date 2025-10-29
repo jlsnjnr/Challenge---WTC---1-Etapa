@@ -60,4 +60,5 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
