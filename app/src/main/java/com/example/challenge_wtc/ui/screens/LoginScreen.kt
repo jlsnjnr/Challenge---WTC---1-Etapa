@@ -41,7 +41,13 @@ fun LoginScreen(navController: NavController, userType: String) {
             onValueChange = { password = it },
             label = { Text("Password") }
         )
-        Button(onClick = { /* Handle login */ }) {
+        Button(onClick = {
+            if (userType == "operator") {
+                navController.navigate("operator_dashboard")
+            } else {
+                navController.navigate("client_home")
+            }
+        }) {
             Text(text = "Login")
         }
     }
