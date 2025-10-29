@@ -1,4 +1,4 @@
-package com.example.challenge_wtc.ui.screens.operator
+package com.example.challenge_wtc.ui.screens.client
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,12 +10,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ClientChatScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Chat Screen")
+        Text(text = "Client Chat Screen")
     }
 }
