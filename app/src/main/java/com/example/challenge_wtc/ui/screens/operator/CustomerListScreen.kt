@@ -1,23 +1,45 @@
+
 package com.example.challenge_wtc.ui.screens.operator
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.challenge_wtc.model.MockData
+import com.example.challenge_wtc.model.Customer
 
 @Composable
 fun CustomerListScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(text = "Customer List")
-        // TODO: Add search and filter functionality
-        // TODO: Add list of customers
+    var searchQuery by remember { mutableStateOf("") }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("🔍 Search Customers") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        // Add filter options here
+
+        LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
+            items(MockData.customers.filter { it.name.contains(searchQuery, ignoreCase = true) }) {
+                CustomerListItem(customer = it) { navController.navigate("customer_profile/${it.id}") }
+            }
+        }
     }
+}
+
+@Composable
+fun CustomerListItem(customer: Customer, onClick: () -> Unit) {
+    ListItem(
+        headlineContent = { Text(customer.name) },
+        supportingContent = { Text("Score: ${customer.score} | Tags: ${customer.tags.joinToString()}") },
+        trailingContent = { Text("Last interaction: ${customer.lastInteraction}") },
+        modifier = Modifier.clickable(onClick = onClick)
+    )
 }

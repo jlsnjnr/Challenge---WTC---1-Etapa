@@ -90,15 +90,21 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
             OperatorDashboardScreen(navController = appNavController)
         }
         composable(OperatorScreen.CustomerList.route) {
-            CustomerListScreen(navController = appNavController)
+            CustomerListScreen(navController = operatorNavController)
+        }
+        composable("customer_profile/{customerId}") { backStackEntry ->
+            CustomerProfileScreen(
+                navController = operatorNavController,
+                customerId = backStackEntry.arguments?.getString("customerId")
+            )
         }
         composable(OperatorScreen.ExpressCampaign.route) {
             ExpressCampaignScreen(navController = appNavController)
         }
-        composable(OperatorScreen.Chat.route) {
+        composable(OperatorScreen.Chat.route + "/{customerId}") { backStackEntry ->
             ChatScreen(
                 navController = appNavController,
-                chatId = TODO(),
+                customerId = backStackEntry.arguments?.getString("customerId")
             )
         }
     }
