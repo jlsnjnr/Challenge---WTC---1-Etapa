@@ -13,10 +13,12 @@ import com.example.challenge_wtc.ui.screens.UserTypeSelectionScreen
 import com.example.challenge_wtc.ui.screens.client.ClientHomeScreen
 import com.example.challenge_wtc.ui.screens.client.ClientProfileScreen
 import com.example.challenge_wtc.ui.screens.operator.*
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         setContent {
             AppNavigation()
         }
