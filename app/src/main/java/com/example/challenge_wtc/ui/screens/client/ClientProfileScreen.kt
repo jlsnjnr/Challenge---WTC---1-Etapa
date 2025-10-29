@@ -13,17 +13,14 @@ import com.example.challenge_wtc.model.MockData
 
 @Composable
 fun ClientProfileScreen(navController: NavController) {
-    val customer = MockData.customers.first() // Assuming a single customer
+    val customer = MockData.customers.first()
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("🙋 Profile")
         Text("Name: ${customer.name}")
         Text("Score: ${customer.score}")
         Text("Tags: ${customer.tags.joinToString()}")
 
-        // Add interaction history
-
-        Button(onClick = { /* Handle logout */ }) {
+        Button(onClick = { navController.navigate("onboarding") } ) {
             Text("⚙️ Logout")
         }
     }

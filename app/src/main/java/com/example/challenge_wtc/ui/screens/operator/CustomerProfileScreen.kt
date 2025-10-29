@@ -1,4 +1,3 @@
-
 package com.example.challenge_wtc.ui.screens.operator
 
 import androidx.compose.foundation.layout.*
@@ -16,11 +15,9 @@ fun CustomerProfileScreen(navController: NavController, customerId: String?) {
 
     customer?.let {
         var notes by remember { mutableStateOf(it.notes) }
-
         Column(modifier = Modifier.padding(16.dp)) {
             Text(it.name, style = MaterialTheme.typography.headlineMedium)
             Text("Status: ${it.status}", color = if (it.status == "Active") Color.Green else Color.Red)
-            // Add other customer details here
             
             Button(onClick = { navController.navigate(OperatorScreen.Chat.route + "/${it.id}") }) {
                 Text("🔘 Open Chat")

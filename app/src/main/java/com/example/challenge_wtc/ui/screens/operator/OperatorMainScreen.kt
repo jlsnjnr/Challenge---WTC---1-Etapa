@@ -104,7 +104,8 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
         composable(OperatorScreen.Chat.route + "/{customerId}") { backStackEntry ->
             ChatScreen(
                 navController = appNavController,
-                customerId = backStackEntry.arguments?.getString("customerId")
+                customerId = backStackEntry.arguments?.getString("customerId"),
+                chatId = TODO(),
             )
         }
     }

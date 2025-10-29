@@ -43,7 +43,10 @@ fun AppNavigation() {
         }
         composable("chat/{chatId}") { backStackEntry ->
             val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
-            ChatScreen(navController = navController, chatId = chatId)
+            ChatScreen(
+                navController = navController, chatId = chatId,
+                customerId = TODO()
+            )
         }
         composable("client_main") {
             ClientMainScreen(navController = navController)

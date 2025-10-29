@@ -13,7 +13,7 @@ import com.example.challenge_wtc.model.MockData
 import com.example.challenge_wtc.model.Message
 
 @Composable
-fun ChatScreen(navController: NavController, customerId: String?) {
+fun ChatScreen(navController: NavController, customerId: String?, chatId: String) {
     val messages = MockData.getMessagesForCustomer(customerId ?: "")
     var newMessage by remember { mutableStateOf("") }
 
