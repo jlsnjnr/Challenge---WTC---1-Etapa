@@ -167,9 +167,9 @@ fun LoginScreen(navController: NavController, userType: String) {
         Button(
             onClick = {
                 if (userType == "operator") {
-                    navController.navigate("operator_dashboard")
+                    navController.navigate("operator_main")
                 } else {
-                    navController.navigate("client_home")
+                    navController.navigate("client_main")
                 }
             },
             modifier = Modifier
