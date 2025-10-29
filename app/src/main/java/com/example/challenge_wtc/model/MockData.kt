@@ -22,15 +22,6 @@ data class Customer(
     val messages: List<Message> = emptyList()
 )
 
-data class Campaign(
-    val id: String,
-    val title: String,
-    val message: String,
-    val imageUrl: String? = null,
-    val segment: String,
-    val sentDate: Date
-)
-
 data class Message(
     val id: String,
     val text: String,
@@ -68,10 +59,24 @@ object MockData {
     val campaigns = listOf(
         Campaign(
             id = "c1",
-            title = "Summer Sale!",
-            message = "Get 50% off on all items.",
-            segment = "All",
-            sentDate = Date()
+            title = "Campanha de Verão 2025",
+            description = "Descubra nossos novos produtos e aproveite descontos exclusivos de até 30% nesta temporada.",
+            imageUrl = "https://picsum.photos/seed/summer/600/400",
+            externalLink = "https://www.example.com"
+        ),
+        Campaign(
+            id = "c2",
+            title = "Inscrições Abertas: Workshop",
+            description = "Aprenda com especialistas do setor em nosso workshop exclusivo. Vagas limitadas, inscreva-se já!",
+            imageUrl = "https://picsum.photos/seed/workshop/600/400",
+            externalLink = "https://www.example.com/workshop"
+        ),
+        Campaign(
+            id = "c3",
+            title = "Oferta Relâmpago",
+            description = "Só hoje! Use o cupom RELAMPAGO20 para 20% de desconto em todo o site. Não perca!",
+            imageUrl = "https://picsum.photos/seed/sale/600/400",
+            externalLink = "https://www.example.com/sale"
         )
     )
 
