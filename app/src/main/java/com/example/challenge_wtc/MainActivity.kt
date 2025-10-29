@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.challenge_wtc.ui.screens.LoginScreen
 import com.example.challenge_wtc.ui.screens.OnboardingScreen
-import com.example.challenge_wtc.ui.screens.UserTypeSelectionScreen
 import com.example.challenge_wtc.ui.screens.client.ClientHomeScreen
 import com.example.challenge_wtc.ui.screens.client.ClientProfileScreen
 import com.example.challenge_wtc.ui.screens.operator.*
@@ -29,9 +28,6 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = "onboarding") {
         composable("onboarding") {
             OnboardingScreen(navController = navController)
-        }
-        composable("user_type_selection") {
-            UserTypeSelectionScreen(navController = navController)
         }
         composable("login/{userType}") { backStackEntry ->
             val userType = backStackEntry.arguments?.getString("userType") ?: ""
