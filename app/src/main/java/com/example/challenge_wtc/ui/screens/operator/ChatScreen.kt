@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, chatId: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()

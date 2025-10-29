@@ -96,7 +96,10 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
             ExpressCampaignScreen(navController = appNavController)
         }
         composable(OperatorScreen.Chat.route) {
-            ChatScreen(navController = appNavController)
+            ChatScreen(
+                navController = appNavController,
+                chatId = TODO(),
+            )
         }
     }
 }
