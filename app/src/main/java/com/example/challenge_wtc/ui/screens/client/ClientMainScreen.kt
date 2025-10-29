@@ -1,13 +1,13 @@
 package com.example.challenge_wtc.ui.screens.client
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Icon
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,7 +61,6 @@ fun ClientTabNavigation(navController: NavHostController, items: List<ClientScre
         }
     }
 }
-
 
 @Composable
 fun ClientNavHost(clientNavController: NavHostController, appNavController: NavController) {

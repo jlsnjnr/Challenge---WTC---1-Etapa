@@ -1,14 +1,14 @@
 package com.example.challenge_wtc.ui.screens.operator
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Icon
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 sealed class OperatorScreen(val route: String, val label: String, val icon: ImageVector) {
-    object Dashboard : OperatorScreen("operator_dashboard", "Dashboard", Icons.Default.Dashboard)
+    object Dashboard : OperatorScreen("operator_dashboard", "Dashboard", Icons.Default.Home)
     object CustomerList : OperatorScreen("customer_list", "Customers", Icons.Default.List)
     object ExpressCampaign : OperatorScreen("express_campaign", "Campaign", Icons.Default.Send)
 }
