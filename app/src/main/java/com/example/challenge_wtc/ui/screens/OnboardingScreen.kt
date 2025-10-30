@@ -1,5 +1,9 @@
 package com.example.challenge_wtc.ui.screens
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -58,6 +62,20 @@ fun OnboardingScreen(navController: NavController) {
 
 @Composable
 fun Step1Content(onContinueClicked: () -> Unit) {
+    val permissionLauncher = rememberLauncherForActivityResult (
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            onContinueClicked()
+        }
+    )
+
+    val onAvançarClick = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            onContinueClicked()
+        }
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -86,7 +104,7 @@ fun Step1Content(onContinueClicked: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "__", color = Color.Black, fontWeight = FontWeight.Bold)
-            TextButton(onClick = onContinueClicked) {
+            TextButton(onClick = onAvançarClick) {
                 Text(
                     text = "Avançar",
                     color = Color.Gray,
