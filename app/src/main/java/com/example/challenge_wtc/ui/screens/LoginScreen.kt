@@ -1,5 +1,6 @@
 package com.example.challenge_wtc.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.firebase.messaging.FirebaseMessaging
 
 @Composable
 fun LoginScreen(navController: NavController, userType: String) {
@@ -166,6 +168,16 @@ fun LoginScreen(navController: NavController, userType: String) {
 
         Button(
             onClick = {
+                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val token = task.result
+                        Log.d("FCM Token", token)
+                        // TODO: Send this token to your backend server
+                    } else {
+                        Log.w("FCM Token", "Fetching FCM registration token failed", task.exception)
+                        return@addOnCompleteListener
+                    }
+                }
                 if (userType == "operator") {
                     navController.navigate("operator_main")
                 } else {
