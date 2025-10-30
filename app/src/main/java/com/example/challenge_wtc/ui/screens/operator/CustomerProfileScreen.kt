@@ -29,8 +29,6 @@ fun CustomerProfileScreen(navController: NavController, customerId: String?) {
                 label = { Text("📝 Quick Notes") },
                 modifier = Modifier.fillMaxWidth().height(150.dp)
             )
-            
-            // Add campaign history here
         }
     }
 }

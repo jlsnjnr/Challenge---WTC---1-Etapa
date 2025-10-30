@@ -34,16 +34,14 @@ import com.example.challenge_wtc.model.MockData
 @Composable
 fun ClientHomeScreen(navController: NavController) {
     val customer = MockData.customers.first()
-    val campaigns = MockData.campaigns // Pega as campanhas
-    val brandColor = Color(0xFF6200EE) // Cor roxa
+    val campaigns = MockData.campaigns
+    val brandColor = Color(0xFF6200EE)
 
-    // LazyColumn é a versão do Compose para RecyclerView (lista rolável)
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp) // Espaço entre os itens
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Item 1: O cabeçalho de boas-vindas
         item {
             Text(
                 text = "Bem vindo, ${customer.name}",
@@ -57,7 +55,6 @@ fun ClientHomeScreen(navController: NavController) {
             )
         }
 
-        // Itens 2, 3, 4...: A lista de campanhas
         items(campaigns) { campaign ->
             CampaignCard(
                 campaign = campaign,
@@ -74,28 +71,24 @@ fun CampaignCard(
     navController: NavController,
     brandColor: Color
 ) {
-    // LocalUriHandler é usado para abrir links no navegador
     val uriHandler = LocalUriHandler.current
 
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-            // Clicar no card pode levar para "Saiba mais" por padrão
             navController.navigate("campaign_detail/${campaign.id}")
         }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            // 1. Imagem da Campanha
             AsyncImage(
                 model = campaign.imageUrl,
                 contentDescription = campaign.title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp),
-                contentScale = ContentScale.Crop // 'Crop' preenche o espaço
+                contentScale = ContentScale.Crop
             )
 
-            // 2. Textos (Título e Descrição)
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = campaign.title,
@@ -111,28 +104,25 @@ fun CampaignCard(
                 )
             }
 
-            // 3. Botões de Ação
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.End // Alinha botões à direita
+                horizontalArrangement = Arrangement.End
             ) {
-                // Ação: "Abrir Link"
                 TextButton(onClick = { uriHandler.openUri(campaign.externalLink) }) {
                     Text("Abrir Link")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // Ação: "Saiba mais"
                 OutlinedButton(
                     onClick = { navController.navigate("campaign_detail/${campaign.id}") }
                 ) {
                     Text("Saiba Mais")
                 }
+
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // Ação: "Inscrever-se" (Botão Principal)
                 Button(
                     onClick = { /* TODO: Lógica de inscrição */ },
                     colors = ButtonDefaults.buttonColors(containerColor = brandColor)

@@ -1,9 +1,7 @@
 package com.example.challenge_wtc.ui.screens.client
 
-// 1. IMPORTAÇÕES NOVAS (verifique se elas estão lá)
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-// ---
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +17,6 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Create // Mudei para 'Label' para consistência // NOVO: Ícone mais apropriado
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -39,26 +36,20 @@ import com.example.challenge_wtc.model.MockData
 @Composable
 fun ClientProfileScreen(navController: NavController) {
     val customer = MockData.customers.first()
-    val brandColor = Color(0xFF6200EE) // Roxo do app
+    val brandColor = Color(0xFF6200EE)
 
-    // Esta é a Column principal (Layout PAI)
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
-        // O alignment foi movido para a Column interna
     ) {
-
-        // 2. NOVA COLUMN ANINHADA (para o conteúdo rolável)
-        // Ela ocupa todo o espaço (weight(1f)) e permite o scroll
         Column(
             modifier = Modifier
-                .weight(1f) // <-- Ocupa todo o espaço, empurrando o botão para baixo
-                .verticalScroll(rememberScrollState()), // <-- ADICIONA O SCROLL
-            horizontalAlignment = Alignment.CenterHorizontally // <-- Alignment movido para cá
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // --- Cabeçalho do Perfil ---
             Spacer(modifier = Modifier.height(32.dp))
 
             Icon(
@@ -83,20 +74,18 @@ fun ClientProfileScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- Cartão de Informações ---
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(vertical = 16.dp)) {
-                    // Email
                     InfoRow(
                         icon = Icons.Default.Email,
                         label = "Email",
                         value = customer.email
                     )
+
                     Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
-                    // Telefone
                     InfoRow(
                         icon = Icons.Default.Phone,
                         label = "Telefone",
@@ -104,29 +93,24 @@ fun ClientProfileScreen(navController: NavController) {
                     )
                     Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
-                    // Score
                     InfoRow(
                         icon = Icons.Default.Star,
                         label = "Score",
                         value = customer.score.toString()
                     )
+
                     Divider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
-                    // Tags
                     InfoRow(
-                        icon = Icons.Default.Star, // Usei Label
+                        icon = Icons.Default.Star,
                         label = "Tags",
                         value = customer.tags.joinToString(", ")
                     )
                 }
             }
-            // 3. O Spacer(weight(1f)) FOI REMOVIDO DAQUI
         }
 
-        // 4. O Botão agora está FORA da Column de scroll
-        //    mas DENTRO da Column principal.
-
-        Spacer(modifier = Modifier.height(16.dp)) // Espaço entre o scroll e o botão
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedButton(
             onClick = { navController.navigate("onboarding") },
