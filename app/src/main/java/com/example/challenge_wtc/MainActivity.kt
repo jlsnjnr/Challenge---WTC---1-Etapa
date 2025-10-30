@@ -3,24 +3,35 @@ package com.example.challenge_wtc
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.challenge_wtc.ui.screens.ChallengeWTCTheme
 import com.example.challenge_wtc.ui.screens.LoginScreen
 import com.example.challenge_wtc.ui.screens.OnboardingScreen
 import com.example.challenge_wtc.ui.screens.UserTypeSelectionScreen
 import com.example.challenge_wtc.ui.screens.client.ClientHomeScreen
 import com.example.challenge_wtc.ui.screens.client.ClientProfileScreen
+import com.example.challenge_wtc.ui.screens.SignUpScreen
 import com.example.challenge_wtc.ui.screens.operator.*
 import com.google.firebase.FirebaseApp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         setContent {
-            AppNavigation()
+            ChallengeWTCTheme {
+                Surface(
+
+                ){
+                    AppNavigation()
+                }
+            }
         }
     }
 }
@@ -38,7 +49,10 @@ fun AppNavigation() {
             UserTypeSelectionScreen(navController = navController)
         }
 
-        composable("login/{userType}") { backStackEntry ->
+        composable(
+            route ="login/{userType}",
+            arguments = listOf(navArgument("userType"){ type = NavType.StringType})
+        ) { backStackEntry ->
             val userType = backStackEntry.arguments?.getString("userType") ?: ""
             LoginScreen(navController = navController, userType = userType)
         }
@@ -51,12 +65,17 @@ fun AppNavigation() {
             CustomerListScreen(navController = navController)
         }
 
-        composable("customer_profile/{customerId}") { backStackEntry ->
-            val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
-            CustomerProfileScreen(navController = navController, customerId = customerId)
+        composable(route ="operator_profile/{operatorId}",
+            arguments = listOf(navArgument("operatorId"){type = NavType.StringType})
+        ) { backStackEntry ->
+            val operatorId = backStackEntry.arguments?.getString("operatorId") ?: ""
+            OperatorProfileScreen(navController = navController, operatorId = operatorId)
         }
 
-        composable("chat/{chatId}") { backStackEntry ->
+        composable(
+            route = "chat/{chatId}",
+            arguments = listOf(navArgument("chatId"){type = NavType.StringType})
+        ) { backStackEntry ->
             val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
             ChatScreen(navController = navController, chatId = chatId)
         }
@@ -71,6 +90,13 @@ fun AppNavigation() {
 
         composable("client_profile") {
             ClientProfileScreen(navController = navController)
+        }
+        composable (
+            route = "signup/{userType}",
+            arguments = listOf(navArgument("userType"){ type = NavType.StringType})
+        ) { backStackEntry ->
+            val userType = backStackEntry.arguments?.getString("userType")
+            SignUpScreen(navController = navController, userType = userType)
         }
     }
 }
