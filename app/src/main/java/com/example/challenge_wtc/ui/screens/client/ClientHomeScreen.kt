@@ -3,39 +3,62 @@ package com.example.challenge_wtc.ui.screens.client
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.Volley
 import com.example.challenge_wtc.model.Campaign
-import com.example.challenge_wtc.model.MockData
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 @Composable
 fun ClientHomeScreen(navController: NavController) {
-    val customer = MockData.customers.first()
-    val campaigns = MockData.campaigns
-    val brandColor = Color(0xFF6200EE)
+    var campaigns by remember { mutableStateOf<List<Campaign>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        val url = "https://api-challenge-5wrx.onrender.com/campaigns"
+        val requestQueue = Volley.newRequestQueue(context)
+        val jsonArrayRequest = JsonArrayRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                isLoading = false
+                val type = object : TypeToken<List<Campaign>>() {}.type
+                campaigns = Gson().fromJson(response.toString(), type)
+            },
+            { error ->
+                isLoading = false
+                errorMessage = "Falha ao carregar campanhas."
+            }
+        )
+        requestQueue.add(jsonArrayRequest)
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -44,92 +67,57 @@ fun ClientHomeScreen(navController: NavController) {
     ) {
         item {
             Text(
-                text = "Bem vindo, ${customer.name}",
+                text = "Bem vindo!",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "Suas campanhas recentes:",
+                text = "Campanhas recentes para você:",
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.Gray
             )
         }
 
-        items(campaigns) { campaign ->
-            CampaignCard(
-                campaign = campaign,
-                navController = navController,
-                brandColor = brandColor
-            )
+        if (isLoading) {
+            item {
+                Column(
+                    modifier = Modifier.fillParentMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        } else if (errorMessage != null) {
+            item {
+                Text(text = errorMessage!!, color = Color.Red, modifier = Modifier.fillMaxWidth().padding(16.dp))
+            }
+        } else {
+            items(campaigns) { campaign ->
+                CampaignCard(campaign = campaign)
+            }
         }
     }
 }
 
 @Composable
-fun CampaignCard(
-    campaign: Campaign,
-    navController: NavController,
-    brandColor: Color
-) {
-    val uriHandler = LocalUriHandler.current
-
-    ElevatedCard(
+fun CampaignCard(campaign: Campaign) {
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {
-            navController.navigate("campaign_detail/${campaign.id}")
-        }
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = campaign.imageUrl,
-                contentDescription = campaign.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                contentScale = ContentScale.Crop
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = campaign.name,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
             )
-
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = campaign.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = campaign.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
-                    maxLines = 3
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = { uriHandler.openUri(campaign.externalLink) }) {
-                    Text("Abrir Link")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-
-                OutlinedButton(
-                    onClick = { navController.navigate("campaign_detail/${campaign.id}") }
-                ) {
-                    Text("Saiba Mais")
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Button(
-                    onClick = { /* TODO: Lógica de inscrição */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = brandColor)
-                ) {
-                    Text("Inscrever-se")
-                }
-            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = campaign.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
         }
     }
 }
