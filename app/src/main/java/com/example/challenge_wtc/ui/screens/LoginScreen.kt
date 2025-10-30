@@ -13,11 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -31,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -40,7 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.messaging.FirebaseMessaging
+import org.json.JSONObject
 
 @Composable
 fun LoginScreen(navController: NavController, userType: String) {
@@ -48,6 +52,9 @@ fun LoginScreen(navController: NavController, userType: String) {
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var rememberMe by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
 
     val brandColor = Color(0xFF6200EE)
     val textFieldPlaceholder = Color.Gray
@@ -65,8 +72,7 @@ fun LoginScreen(navController: NavController, userType: String) {
         AsyncImage(
             model = "file:///android_asset/brand.png",
             contentDescription = "Logo",
-            modifier = Modifier
-                .size(60.dp),
+            modifier = Modifier.size(60.dp),
             contentScale = ContentScale.Fit
         )
 
@@ -164,38 +170,80 @@ fun LoginScreen(navController: NavController, userType: String) {
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        errorMessage?.let {
+            Text(
+                text = it,
+                color = Color.Red,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
 
         Button(
             onClick = {
+                isLoading = true
+                errorMessage = null
                 FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val token = task.result
-                        Log.d("FCM Token", token)
-                        // TODO: Send this token to your backend server
+                        val fcmToken = task.result
+                        Log.d("FCM Token", fcmToken)
+
+                        val url = "https://api-challenge-5wrx.onrender.com/auth/login"
+                        val requestQueue = Volley.newRequestQueue(context)
+                        val jsonBody = JSONObject()
+                        jsonBody.put("email", email)
+                        jsonBody.put("senha", password)
+                        jsonBody.put("fcmToken", fcmToken)
+
+                        val jsonObjectRequest = JsonObjectRequest(
+                            Request.Method.POST, url, jsonBody,
+                            { response ->
+                                isLoading = false
+                                Log.d("Login Response", response.toString())
+                                if (userType == "operator") {
+                                    navController.navigate("operator_main")
+                                } else {
+                                    navController.navigate("client_main")
+                                }
+                            },
+                            { error ->
+                                isLoading = false
+                                val networkResponse = error.networkResponse
+                                if (networkResponse != null && networkResponse.statusCode == 401) {
+                                    errorMessage = "Email ou senha incorretos."
+                                } else {
+                                    errorMessage = "Ocorreu um erro. Tente novamente."
+                                }
+                                Log.e("Login Error", error.toString())
+                            }
+                        )
+                        requestQueue.add(jsonObjectRequest)
+
                     } else {
+                        isLoading = false
+                        errorMessage = "Não foi possível obter o token de notificação."
                         Log.w("FCM Token", "Fetching FCM registration token failed", task.exception)
-                        return@addOnCompleteListener
                     }
-                }
-                if (userType == "operator") {
-                    navController.navigate("operator_main")
-                } else {
-                    navController.navigate("client_main")
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = brandColor)
+            colors = ButtonDefaults.buttonColors(containerColor = brandColor),
+            enabled = !isLoading
         ) {
-            Text(
-                text = "Login",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
+            if (isLoading) {
+                CircularProgressIndicator(color = Color.White)
+            } else {
+                Text(
+                    text = "Login",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
