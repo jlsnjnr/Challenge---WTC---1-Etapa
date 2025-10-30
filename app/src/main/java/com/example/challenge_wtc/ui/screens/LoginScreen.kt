@@ -2,6 +2,7 @@ package com.example.challenge_wtc.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +32,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,35 +57,47 @@ fun LoginScreen(navController: NavController, userType: String) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
                 .background(color = colorResource(R.color.azul)),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = "Bem-vindo ao Bridge Chat",
+                color = colorResource(R.color.white),
+                fontFamily = Inter,
+                style = MaterialTheme.typography.headlineLarge,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
                     .padding(horizontal = 40.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Image(
+                    painter = painterResource(R.drawable.img),
+                    contentDescription = "Logo Bridge Chat",
+                    modifier = Modifier.size(220.dp)
+                )
                 Text(
-                    text = "Bem-vindo ao Bridge Chat",
+                    text = "Conecte-se com clientes via chat, impulsione vendas com campanhas promocionais e organize todo o histórico com anotações privadas",
                     color = colorResource(R.color.white),
                     fontFamily = Inter,
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontSize = 20.sp
-                )
-                Spacer(modifier = Modifier.height(20.dp)) // espaçamento dinâmico
-
-                Image(
-                    painter = painterResource(R.drawable.logo_bridge_chat),
-                    contentDescription = "Logo Bridge Chat"
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    fontSize = 15.sp
                 )
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(10.dp)) // espaçamento dinâmico
+
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Login para $userType",
+                    text = "Login $userType",
                     fontFamily = Inter,
                     fontSize = 19.sp,
                     style = MaterialTheme.typography.headlineSmall,
@@ -106,7 +124,7 @@ fun LoginScreen(navController: NavController, userType: String) {
                     )
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
                 TextField(
                     value = password,
@@ -127,22 +145,43 @@ fun LoginScreen(navController: NavController, userType: String) {
                     visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
+                Text(
+                    text = "Esqueceu a senha?",
+                    fontFamily = Inter,
+                    textDecoration = TextDecoration.Underline,
+                    color = colorResource(R.color.white),
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.clickable(
+                        onClick = { /* Lógica para redefinir senha */ }
+                    )
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+
+                val brandColor = colorResource(R.color.azul)
                 Button(
-                    onClick = { /* TODO: ação de login */ },
+                    onClick = {
+                        if (userType == "operador") {
+                            navController.navigate("operator_dashboard")
+                        } else {
+                            navController.navigate("client_home")
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.white),
-
-                        contentColor = colorResource(R.color.azul),
-
-                        disabledContentColor = Color.Gray,
-                        disabledContainerColor = Color.LightGray
+                        contentColor = Color.White
                     )
                 ) {
                     Text(
                         text = "Login",
-                        fontFamily = Inter,
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -156,3 +195,4 @@ fun LoginScreenPreview() {
     val navController = rememberNavController()
     LoginScreen(navController = navController, userType = "Operador")
 }
+

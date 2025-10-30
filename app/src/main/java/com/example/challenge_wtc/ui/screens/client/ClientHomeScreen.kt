@@ -1,7 +1,9 @@
 package com.example.challenge_wtc.ui.screens.client
 
+import androidx.compose.foundation.Image
 import com.example.challenge_wtc.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -46,11 +49,8 @@ fun ClientHomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .background(color = colorResource(R.color.white))
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
-
         Row(
             modifier = Modifier
                 .background(colorResource(R.color.azul))
@@ -59,10 +59,12 @@ fun ClientHomeScreen(navController: NavController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Icon(
-                painterResource(R.drawable.icon_user),
+            Image(
+                painter = painterResource(R.drawable.icon_user),
                 contentDescription = "Ícone de usuário",
-                tint = colorResource(R.color.white)
+                modifier = Modifier.clickable{
+                    navController.navigate("client_profile")
+                }
             )
             Text(
                 text = "Bridge Chat",
@@ -113,7 +115,9 @@ fun ClientHomeScreen(navController: NavController) {
                     "Campanha Marketing Nike.",
                     "Evento Tech!",
                     "Chat Whatsapp",
-                    "Tráfego pago cliente x"
+                    "Tráfego pago cliente x",
+                    "Produto Instagram",
+                    "Anúncios Facebook"
                 )
                 // Cria um cartão para cada item da lista
                 cardTexts.forEach { texto ->

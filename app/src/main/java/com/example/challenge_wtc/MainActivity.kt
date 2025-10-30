@@ -29,36 +29,46 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "onboarding") {
+
         composable("onboarding") {
             OnboardingScreen(navController = navController)
         }
+
         composable("user_type_selection") {
             UserTypeSelectionScreen(navController = navController)
         }
+
         composable("login/{userType}") { backStackEntry ->
             val userType = backStackEntry.arguments?.getString("userType") ?: ""
             LoginScreen(navController = navController, userType = userType)
         }
+
         composable("operator_dashboard") {
             OperatorDashboardScreen(navController = navController)
         }
+
         composable("customer_list") {
             CustomerListScreen(navController = navController)
         }
+
         composable("customer_profile/{customerId}") { backStackEntry ->
             val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
             CustomerProfileScreen(navController = navController, customerId = customerId)
         }
+
         composable("chat/{chatId}") { backStackEntry ->
             val chatId = backStackEntry.arguments?.getString("chatId") ?: ""
             ChatScreen(navController = navController, chatId = chatId)
         }
+
         composable("express_campaign") {
             ExpressCampaignScreen(navController = navController)
         }
+
         composable("client_home") {
             ClientHomeScreen(navController = navController)
         }
+
         composable("client_profile") {
             ClientProfileScreen(navController = navController)
         }

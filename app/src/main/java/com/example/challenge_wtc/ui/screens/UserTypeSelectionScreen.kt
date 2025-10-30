@@ -23,11 +23,11 @@ fun UserTypeSelectionScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Are you a customer or an operator?")
-        Button(onClick = { navController.navigate("login/customer") }) {
-            Text(text = "Customer")
+        Button(onClick = { navController.navigate("login/cliente") }) {
+            Text(text = "Cliente")
         }
-        Button(onClick = { navController.navigate("login/operator") }) {
-            Text(text = "Operator")
+        Button(onClick = { navController.navigate("login/operador") }) {
+            Text(text = "Operador")
         }
     }
 }
