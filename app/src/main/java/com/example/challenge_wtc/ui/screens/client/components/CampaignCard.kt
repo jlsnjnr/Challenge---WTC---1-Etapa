@@ -21,7 +21,8 @@ data class Campaign(
     val title: String = "",
     val description: String = "",
     val operatorName: String = "", // Nome da empresa/operador
-    val imageUrl: String = ""      // URL da imagem da campanha
+    val imageUrl: String = "",// URL da imagem da campanha
+    val operatorId: String = ""
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

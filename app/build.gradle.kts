@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -36,6 +38,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+
+    }
+    
+    composeOptions{
+        kotlinCompilerExtensionVersion = "1.7.5"
     }
 
     kotlinOptions {
@@ -47,11 +54,11 @@ dependencies {
     // Núcleo e Ciclo de Vida
     implementation(libs.androidx.core.ktx)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.3")
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     // BOMs
-    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
     // Compose UI
@@ -62,7 +69,9 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.runtime)
+    implementation(libs.androidx.foundation)
     debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-text")
 
     // Navegação
     implementation("androidx.navigation:navigation-compose:2.7.7")

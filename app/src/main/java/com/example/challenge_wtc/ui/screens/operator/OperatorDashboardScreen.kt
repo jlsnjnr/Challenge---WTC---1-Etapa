@@ -40,7 +40,8 @@ import kotlinx.coroutines.tasks.await
 data class Campaign(
     val id: String = "", // O ID do documento
     val title: String = "",
-    val operatorId: String = ""
+    val operatorId: String = "",
+    val operatorName: String = ""
     // Adicione description, imageUrl se quiser exibi-los
 )
 
@@ -73,8 +74,8 @@ fun OperatorDashboardScreen(navController: NavController) {
     LaunchedEffect(key1 = operatorUid) {
         // Se o operador não estiver logado, não faz nada (ou volta pro login)
         if (operatorUid == null) {
-            Log.e("OperatorDashboard", "Operador não está logado!")
-            navController.navigate("user_type_selection") { popUpTo(0) }
+            Log.e("OperatorDashboard", "UID do operador é nulo. Aguardando ou saindo")
+            isLoading = false
             return@LaunchedEffect
         }
 
@@ -97,11 +98,21 @@ fun OperatorDashboardScreen(navController: NavController) {
 
             // Etapa 3: Para cada campanha, buscar os stats de chat
             // NOTA: Isso faz N+1 consultas. Para um app real com muitas campanhas,
-            // o ideal seria usar Firebase Functions para manter contadores.
+            // o ideal seria usar Firebase Functions para manter contadores.ch
             // Para seu projeto, esta é a forma mais direta e correta.
             val statsList = mutableListOf<CampaignWithStats>()
             for (campaign in operatorCampaigns) {
+                var currentOperatorName = "????"
+
+                try{
+                    val opDoc = firestore.collection("users").document(campaign.operatorId).get().await()
+                    currentOperatorName = opDoc.getString("name") ?: "Operador Externo"
+                }catch (e: Exception){
+                    Log.e("Dashboard", "Não conseguiu buscar nome do operador ${campaign.operatorId}", e)
+                }
+
                 // Conta chats ativos
+
                 val activeCount = getChatCountForCampaign(firestore, campaign.id, "active")
                 // Conta chats resolvidos
                 val resolvedCount = getChatCountForCampaign(firestore, campaign.id, "resolved")
@@ -129,7 +140,19 @@ fun OperatorDashboardScreen(navController: NavController) {
         topBar = {
             OperatorTopAppBar(navController) // Seu TopAppBar (atualizado abaixo)
         },
-        containerColor = colorResource(R.color.azul)
+        // 🚨 ADICIONE O FLOATING ACTION BUTTON AQUI 🚨
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("express_campaign") // Navega para a tela de criar campanha
+                },
+                containerColor = MaterialTheme.colorScheme.secondary, // Você pode ajustar a cor
+                contentColor = Color.White // Cor do ícone
+            ) {
+                Icon(Icons.Filled.Add, "Adicionar Campanha") // Ícone de "+"
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
 
         // --- 5. CORPO DA TELA ATUALIZADO ---
@@ -181,7 +204,7 @@ fun OperatorDashboardScreen(navController: NavController) {
                         stat = campaignStat,
                         onCardClick = {
                             // Futuramente: navegar para a lista de chats desta campanha
-                            // navController.navigate("chat_list/${campaignStat.campaign.id}")
+                            navController.navigate("chat/${campaignStat.campaign.id}")
                             Log.d("OperatorDashboard", "Clicou na campanha: ${campaignStat.campaign.title}")
                         }
                     )
