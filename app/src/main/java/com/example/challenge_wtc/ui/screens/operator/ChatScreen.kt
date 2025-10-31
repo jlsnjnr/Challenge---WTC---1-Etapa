@@ -34,8 +34,9 @@ fun ChatScreen(roomCode: String) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(roomCode) {
+        // A chamada foi simplificada, sem o callback
+        viewModel.loadHistory(roomCode)
         viewModel.connect(roomCode)
-        viewModel.loadHistory(roomCode) {}
     }
 
     LaunchedEffect(messages.size) {
@@ -46,13 +47,15 @@ fun ChatScreen(roomCode: String) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
-            items(items = messages, key = { it.hashCode() }) { message: Message ->
+            items(items = messages, key = { it.id ?: it.hashCode() }) { message: Message ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
                 ) {
-                    val alignment = if (message.senderId == "me") Alignment.CenterEnd else Alignment.CenterStart
+                    // Você precisará de uma forma de identificar o ID do usuário atual
+                    val currentUserId = "me" // Substitua por AuthManager.getCurrentUserId() ou similar
+                    val alignment = if (message.senderId == currentUserId) Alignment.CenterEnd else Alignment.CenterStart
                     Text(
                         text = message.message ?: "",
                         modifier = Modifier.align(alignment)
