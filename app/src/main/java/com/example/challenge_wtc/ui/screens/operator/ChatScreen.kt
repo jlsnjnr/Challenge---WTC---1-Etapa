@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -28,7 +28,7 @@ import com.example.challenge_wtc.service.ChatViewModel
 @Composable
 fun ChatScreen(roomCode: String) {
     val viewModel: ChatViewModel = viewModel()
-    val messages by viewModel.messages.collectAsState()
+    val messages: List<Message> by viewModel.messages.collectAsState()
     var text by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
 
@@ -45,10 +45,10 @@ fun ChatScreen(roomCode: String) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
-            itemsIndexed(messages, key = { index, item -> item.hashCode() }) { index, message ->
+            items(items = messages, key = { message -> message.hashCode() }) { message: Message ->
                 val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     horizontalArrangement = arrangement
                 ) {
                     Text(text = message.message ?: "")
