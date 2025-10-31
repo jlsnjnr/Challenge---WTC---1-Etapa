@@ -87,7 +87,7 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
         startDestination = OperatorScreen.Dashboard.route
     ) {
         composable(OperatorScreen.Dashboard.route) {
-            OperatorDashboardScreen(navController = appNavController)
+            OperatorDashboardScreen()
         }
         composable(OperatorScreen.CustomerList.route) {
             CustomerListScreen(navController = operatorNavController)
