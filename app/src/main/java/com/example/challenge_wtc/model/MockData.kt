@@ -1,89 +1,44 @@
-
 package com.example.challenge_wtc.model
 
 import java.util.Date
 
-data class Operator(
-    val name: String = "Jessica"
-)
+// A classe Message duplicada foi removida מכאן.
 
-data class Customer(
-    val id: String,
-    val name: String,
-    val score: Int,
-    val tags: List<String>,
-    val lastInteraction: Date,
-    val avatarUrl: String? = null,
-    val phone: String,
-    val email: String,
-    val status: String,
-    val notes: String = "",
-    val campaigns: List<Campaign> = emptyList(),
-    val messages: List<Message> = emptyList()
-)
+// O código abaixo foi comentado porque estava causando erros de compilação
+// devido a modelos de dados desatualizados. Ele precisa ser atualizado
+// para corresponder às definições atuais das suas data classes (Campaign, Message, etc.)
 
-data class Message(
-    val id: String,
-    val text: String,
-    val isFromOperator: Boolean,
-    val timestamp: Date,
-    val isImportant: Boolean = false
-)
-
+/*
 object MockData {
-    val operator = Operator()
-
-    val customers = listOf(
-        Customer(
-            id = "1",
-            name = "John Doe",
-            score = 95,
-            tags = listOf("VIP", "Active"),
-            lastInteraction = Date(),
-            phone = "+123456789",
-            email = "john.doe@example.com",
-            status = "Active"
-        ),
-        Customer(
-            id = "2",
-            name = "Jane Smith",
-            score = 82,
-            tags = listOf("New"),
-            lastInteraction = Date(),
-            phone = "+987654321",
-            email = "jane.smith@example.com",
-            status = "Inactive"
-        )
-    )
-
     val campaigns = listOf(
         Campaign(
-            id = "c1",
-            title = "Campanha de Verão 2025",
-            description = "Descubra nossos novos produtos e aproveite descontos exclusivos de até 30% nesta temporada.",
-            imageUrl = "https://picsum.photos/seed/summer/600/400",
-            externalLink = "https://www.example.com"
+            id = "1",
+            title = "Campanha de Marketing Digital",
+            description = "Promover novos produtos digitais.",
+            imageUrl = "https://exemplo.com/imagem1.jpg",
+            externalLink = "https://exemplo.com/campanha1"
         ),
         Campaign(
-            id = "c2",
-            title = "Inscrições Abertas: Workshop",
-            description = "Aprenda com especialistas do setor em nosso workshop exclusivo. Vagas limitadas, inscreva-se já!",
-            imageUrl = "https://picsum.photos/seed/workshop/600/400",
-            externalLink = "https://www.example.com/workshop"
+            id = "2",
+            title = "Lançamento de Produto Y",
+            description = "Campanha de lançamento para o produto Y.",
+            imageUrl = "https://exemplo.com/imagem2.jpg",
+            externalLink = "https://exemplo.com/campanha2"
         ),
         Campaign(
-            id = "c3",
-            title = "Oferta Relâmpago",
-            description = "Só hoje! Use o cupom RELAMPAGO20 para 20% de desconto em todo o site. Não perca!",
-            imageUrl = "https://picsum.photos/seed/sale/600/400",
-            externalLink = "https://www.example.com/sale"
+            id = "3",
+            title = "Promoção de Fim de Ano",
+            description = "Descontos especiais para o fim de ano.",
+            imageUrl = "https://exemplo.com/imagem3.jpg",
+            externalLink = "https://exemplo.com/campanha3"
         )
     )
 
-    fun getMessagesForCustomer(customerId: String): List<Message> {
-        return listOf(
-            Message("m1", "Hello! How can I help you?", true, Date()),
-            Message("m2", "I have a question about my order.", false, Date()),
-        )
-    }
+    val messages = listOf(
+        Message(type = "TEXT", roomCode = "1234", message = "Olá, tudo bem?", senderId = "user1"),
+        Message(type = "TEXT", roomCode = "1234", message = "Tudo bem, e com você?", senderId = "user2"),
+        Message(type = "IMAGE", roomCode = "1234", message = "https://exemplo.com/imagem_chat.jpg", senderId = "user1")
+    )
+
 }
+*/
