@@ -24,18 +24,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.challenge_wtc.ui.screens.client.ClientChatScreen
-import com.example.challenge_wtc.ui.screens.client.ClientHomeScreen
-import com.example.challenge_wtc.ui.screens.client.ClientProfileScreen
 
-// Assumindo que estas telas existem
-@Composable fun OperatorDashboardScreen() {}
-@Composable fun CustomerListScreen(navController: NavController) {}
-@Composable fun ExpressCampaignScreen(navController: NavController) {}
-@Composable fun CustomerProfileScreen(navController: NavController, customerId: String) {}
+// As declarações de função duplicadas foram removidas.
 
-
-// CORREÇÃO 1: A rota do Chat agora inclui o placeholder do argumento.
 sealed class OperatorScreen(val route: String, val label: String, val icon: ImageVector) {
     object Dashboard : OperatorScreen("operator_dashboard", "Dashboard", Icons.Default.Home)
     object CustomerList : OperatorScreen("customer_list", "Customers", Icons.Default.List)
@@ -78,9 +69,7 @@ fun OperatorTabNavigation(navController: NavHostController, items: List<Operator
                 onClick = {
                     selectedItem = index
 
-                    // CORREÇÃO 2: Lógica robusta para lidar com rotas que precisam de argumentos.
                     val route = if (screen.route.contains("{customerId}")) {
-                        // Se a rota precisar de um ID, usamos um valor padrão para evitar o crash.
                         screen.route.replace("{customerId}", "default-customer")
                     } else {
                         screen.route
@@ -123,7 +112,6 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
             ExpressCampaignScreen(navController = appNavController)
         }
         
-        // CORREÇÃO 3: O composable agora usa a rota completa definida no OperatorScreen.Chat
         composable(OperatorScreen.Chat.route) { backStackEntry ->
             val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
             ChatScreen(roomCode = customerId)

@@ -9,9 +9,7 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel : ViewModel() {
 
-    // CORRIGIDO: Acessando a propriedade 'token' diretamente, em vez de chamar um método inexistente.
     private val token = AuthManager.token
-
     private val chatService = if (token != null) {
         ChatService(token)
     } else {
@@ -20,22 +18,19 @@ class ChatViewModel : ViewModel() {
 
     val messages: StateFlow<List<Message>> = chatService.messages
 
-    fun connect(roomCode: String) {
-        chatService.connect(roomCode)
-    }
-
-    fun sendMessage(roomCode: String, message: String) {
-        chatService.sendMessage(roomCode, message)
-    }
-
     fun loadHistory(roomCode: String) {
         viewModelScope.launch {
             chatService.loadHistory(roomCode)
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        chatService.disconnect()
+    fun sendMessage(roomCode: String, message: String) {
+        viewModelScope.launch {
+            val success = chatService.sendMessage(roomCode, message)
+            if (success) {
+                // Após enviar, recarrega o histórico para mostrar a nova mensagem
+                chatService.loadHistory(roomCode)
+            }
+        }
     }
 }

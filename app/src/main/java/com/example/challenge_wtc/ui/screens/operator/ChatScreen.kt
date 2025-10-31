@@ -33,10 +33,9 @@ fun ChatScreen(roomCode: String) {
     var text by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
 
+    // Removemos a chamada `connect`, agora apenas carregamos o histórico.
     LaunchedEffect(roomCode) {
-        // A chamada foi simplificada, sem o callback
         viewModel.loadHistory(roomCode)
-        viewModel.connect(roomCode)
     }
 
     LaunchedEffect(messages.size) {
@@ -53,8 +52,7 @@ fun ChatScreen(roomCode: String) {
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
                 ) {
-                    // Você precisará de uma forma de identificar o ID do usuário atual
-                    val currentUserId = "me" // Substitua por AuthManager.getCurrentUserId() ou similar
+                    val currentUserId = "me" // Substitua por um identificador real do usuário
                     val alignment = if (message.senderId == currentUserId) Alignment.CenterEnd else Alignment.CenterStart
                     Text(
                         text = message.message ?: "",
