@@ -1,6 +1,6 @@
 package com.example.challenge_wtc.ui.screens.operator
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,13 +46,17 @@ fun ChatScreen(roomCode: String) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
-            items(items = messages, key = { message -> message.hashCode() }) { message: Message ->
-                val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                    horizontalArrangement = arrangement
+            items(items = messages, key = { it.hashCode() }) { message: Message ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 ) {
-                    Text(text = message.message ?: "")
+                    val alignment = if (message.senderId == "me") Alignment.CenterEnd else Alignment.CenterStart
+                    Text(
+                        text = message.message ?: "",
+                        modifier = Modifier.align(alignment)
+                    )
                 }
             }
         }
