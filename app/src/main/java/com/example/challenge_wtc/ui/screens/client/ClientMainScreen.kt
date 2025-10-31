@@ -24,12 +24,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-// Assumindo que esses composables existem em seus respectivos arquivos
-@Composable
-fun ClientHomeScreen(navController: NavController) {}
-
-@Composable
-fun ClientProfileScreen(navController: NavController) {}
+// As funções duplicadas foram removidas. O arquivo agora assume que
+// ClientHomeScreen e ClientProfileScreen estão definidas em outros lugares e importadas.
 
 sealed class ClientScreen(val route: String, val label: String, val icon: ImageVector) {
     object Home : ClientScreen("client_home", "Home", Icons.Default.Home)
@@ -93,8 +89,6 @@ fun ClientNavHost(clientNavController: NavHostController, appNavController: NavC
             ClientProfileScreen(navController = appNavController)
         }
         composable(ClientScreen.Chat.route) {
-            // CORRIGIDO: Adicionado o parâmetro 'roomCode'.
-            // Você precisará de uma lógica para obter o código da sala correto.
             ClientChatScreen(navController = appNavController, roomCode = "default_room")
         }
     }

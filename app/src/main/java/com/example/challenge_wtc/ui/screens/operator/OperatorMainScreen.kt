@@ -25,15 +25,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-// Assumindo que estes composables existem em seus respectivos arquivos
-@Composable
-fun OperatorDashboardScreen() {}
-
-@Composable
-fun CustomerListScreen(navController: NavController) {}
-
-@Composable
-fun ExpressCampaignScreen(navController: NavController) {}
+// As funções duplicadas foram removidas. O arquivo agora assume que
+// as telas do operador estão definidas em outros lugares e importadas.
 
 sealed class OperatorScreen(val route: String, val label: String, val icon: ImageVector) {
     object Dashboard : OperatorScreen("operator_dashboard", "Dashboard", Icons.Default.Home)
@@ -76,11 +69,8 @@ fun OperatorTabNavigation(navController: NavHostController, items: List<Operator
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    // Modificado para lidar com rotas que podem ter argumentos
                     val route = if (screen.route.contains("{")) {
-                        // Lógica para substituir argumentos se necessário, ou rota padrão
-                        // Ex: OperatorScreen.Chat.route.replace("{customerId}", "some_default_id")
-                        screen.route
+                        screen.route.replace("{customerId}", "default_customer") // Rota de exemplo
                     } else {
                         screen.route
                     }
@@ -120,10 +110,8 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
         composable(OperatorScreen.ExpressCampaign.route) {
             ExpressCampaignScreen(navController = appNavController)
         }
-        // Rota de Chat agora espera um argumento
         composable(OperatorScreen.Chat.route + "/{customerId}") { backStackEntry ->
             val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
-            // CORRIGIDO: A chamada para ChatScreen agora passa apenas o roomCode
             ChatScreen(roomCode = customerId)
         }
     }
