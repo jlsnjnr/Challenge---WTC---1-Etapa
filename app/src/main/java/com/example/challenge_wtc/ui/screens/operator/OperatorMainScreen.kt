@@ -87,26 +87,24 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
         startDestination = OperatorScreen.Dashboard.route
     ) {
         composable(OperatorScreen.Dashboard.route) {
-            OperatorDashboardScreen()
+            OperatorDashboardScreen() // Assumindo que esta tela existe
         }
         composable(OperatorScreen.CustomerList.route) {
-            CustomerListScreen(navController = operatorNavController)
+            CustomerListScreen(navController = operatorNavController) // Assumindo que esta tela existe
         }
         composable("customer_profile/{customerId}") { backStackEntry ->
+            val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
             CustomerProfileScreen(
                 navController = operatorNavController,
-                customerId = backStackEntry.arguments?.getString("customerId")
+                customerId = customerId
             )
         }
         composable(OperatorScreen.ExpressCampaign.route) {
-            ExpressCampaignScreen(navController = appNavController)
+            ExpressCampaignScreen(navController = appNavController) // Assumindo que esta tela existe
         }
         composable(OperatorScreen.Chat.route + "/{customerId}") { backStackEntry ->
-            ChatScreen(
-                navController = appNavController,
-                customerId = backStackEntry.arguments?.getString("customerId"),
-                chatId = TODO(),
-            )
+            val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
+            ChatScreen(roomCode = customerId) // Usa customerId como roomCode
         }
     }
 }

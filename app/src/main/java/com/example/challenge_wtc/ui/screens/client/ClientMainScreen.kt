@@ -80,13 +80,16 @@ fun ClientTabNavigation(navController: NavHostController, items: List<ClientScre
 fun ClientNavHost(clientNavController: NavHostController, appNavController: NavController) {
     NavHost(navController = clientNavController, startDestination = ClientScreen.Home.route) {
         composable(ClientScreen.Home.route) {
-            ClientHomeScreen(navController = appNavController)
+            // Substitua por sua tela real de Home do Cliente
+            Text("Client Home Screen")
         }
         composable(ClientScreen.Profile.route) {
-            ClientProfileScreen(navController = appNavController)
+            // Substitua por sua tela real de Perfil do Cliente
+            Text("Client Profile Screen")
         }
         composable(ClientScreen.Chat.route) {
-            ClientChatScreen(navController = appNavController)
+            // O roomCode precisa ser obtido de algum lugar (ex: lista de conversas)
+            ClientChatScreen(navController = appNavController, roomCode = "client_chat_room")
         }
     }
 }
