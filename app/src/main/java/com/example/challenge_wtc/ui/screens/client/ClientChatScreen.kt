@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -46,8 +46,8 @@ fun ClientChatScreen(navController: NavController, roomCode: String) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
-            items(messages) { message: Message ->
-                 val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
+            itemsIndexed(messages, key = { index, item -> item.hashCode() }) { index, message ->
+                val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = arrangement
