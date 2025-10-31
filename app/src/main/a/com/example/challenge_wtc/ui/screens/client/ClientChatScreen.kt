@@ -1,4 +1,4 @@
-package com.example.challenge_wtc.ui.screens.operator
+package com.example.challenge_wtc.ui.screens.client
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,11 +22,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.challenge_wtc.model.Message
 import com.example.challenge_wtc.service.ChatViewModel
 
 @Composable
-fun ChatScreen(roomCode: String) {
+fun ClientChatScreen(navController: NavController, roomCode: String) {
     val viewModel: ChatViewModel = viewModel()
     val messages by viewModel.messages.collectAsState()
     var text by remember { mutableStateOf("") }
@@ -34,7 +35,7 @@ fun ChatScreen(roomCode: String) {
 
     LaunchedEffect(roomCode) {
         viewModel.connect(roomCode)
-        viewModel.loadHistory(roomCode) {}
+        viewModel.loadHistory(roomCode) { }
     }
 
     LaunchedEffect(messages.size) {
@@ -46,7 +47,7 @@ fun ChatScreen(roomCode: String) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
             items(messages) { message ->
-                val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
+                 val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = arrangement
@@ -63,7 +64,7 @@ fun ChatScreen(roomCode: String) {
                 modifier = Modifier.weight(1f)
             )
             Button(onClick = {
-                if (text.isNotBlank()) {
+                 if (text.isNotBlank()) {
                     viewModel.sendMessage(roomCode, text)
                     text = ""
                 }
