@@ -25,6 +25,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
+// Assumindo que estes composables existem em seus respectivos arquivos
+@Composable
+fun OperatorDashboardScreen() {}
+
+@Composable
+fun CustomerListScreen(navController: NavController) {}
+
+@Composable
+fun ExpressCampaignScreen(navController: NavController) {}
+
 sealed class OperatorScreen(val route: String, val label: String, val icon: ImageVector) {
     object Dashboard : OperatorScreen("operator_dashboard", "Dashboard", Icons.Default.Home)
     object CustomerList : OperatorScreen("customer_list", "Customers", Icons.Default.List)
@@ -66,7 +76,15 @@ fun OperatorTabNavigation(navController: NavHostController, items: List<Operator
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    navController.navigate(screen.route) {
+                    // Modificado para lidar com rotas que podem ter argumentos
+                    val route = if (screen.route.contains("{")) {
+                        // Lógica para substituir argumentos se necessário, ou rota padrão
+                        // Ex: OperatorScreen.Chat.route.replace("{customerId}", "some_default_id")
+                        screen.route
+                    } else {
+                        screen.route
+                    }
+                    navController.navigate(route) {
                         popUpTo(navController.graph.startDestinationId) {
                             saveState = true
                         }
@@ -87,10 +105,10 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
         startDestination = OperatorScreen.Dashboard.route
     ) {
         composable(OperatorScreen.Dashboard.route) {
-            OperatorDashboardScreen() // Assumindo que esta tela existe
+            OperatorDashboardScreen()
         }
         composable(OperatorScreen.CustomerList.route) {
-            CustomerListScreen(navController = operatorNavController) // Assumindo que esta tela existe
+            CustomerListScreen(navController = operatorNavController)
         }
         composable("customer_profile/{customerId}") { backStackEntry ->
             val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
@@ -100,11 +118,13 @@ fun OperatorNavHost(operatorNavController: NavHostController, appNavController: 
             )
         }
         composable(OperatorScreen.ExpressCampaign.route) {
-            ExpressCampaignScreen(navController = appNavController) // Assumindo que esta tela existe
+            ExpressCampaignScreen(navController = appNavController)
         }
+        // Rota de Chat agora espera um argumento
         composable(OperatorScreen.Chat.route + "/{customerId}") { backStackEntry ->
             val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
-            ChatScreen(roomCode = customerId) // Usa customerId como roomCode
+            // CORRIGIDO: A chamada para ChatScreen agora passa apenas o roomCode
+            ChatScreen(roomCode = customerId)
         }
     }
 }

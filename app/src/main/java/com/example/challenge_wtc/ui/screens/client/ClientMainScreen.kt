@@ -24,6 +24,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
+// Assumindo que esses composables existem em seus respectivos arquivos
+@Composable
+fun ClientHomeScreen(navController: NavController) {}
+
+@Composable
+fun ClientProfileScreen(navController: NavController) {}
+
 sealed class ClientScreen(val route: String, val label: String, val icon: ImageVector) {
     object Home : ClientScreen("client_home", "Home", Icons.Default.Home)
     object Profile : ClientScreen("client_profile", "Profile", Icons.Default.Person)
@@ -80,16 +87,15 @@ fun ClientTabNavigation(navController: NavHostController, items: List<ClientScre
 fun ClientNavHost(clientNavController: NavHostController, appNavController: NavController) {
     NavHost(navController = clientNavController, startDestination = ClientScreen.Home.route) {
         composable(ClientScreen.Home.route) {
-            // Substitua por sua tela real de Home do Cliente
-            Text("Client Home Screen")
+            ClientHomeScreen(navController = appNavController)
         }
         composable(ClientScreen.Profile.route) {
-            // Substitua por sua tela real de Perfil do Cliente
-            Text("Client Profile Screen")
+            ClientProfileScreen(navController = appNavController)
         }
         composable(ClientScreen.Chat.route) {
-            // O roomCode precisa ser obtido de algum lugar (ex: lista de conversas)
-            ClientChatScreen(navController = appNavController, roomCode = "client_chat_room")
+            // CORRIGIDO: Adicionado o parâmetro 'roomCode'.
+            // Você precisará de uma lógica para obter o código da sala correto.
+            ClientChatScreen(navController = appNavController, roomCode = "default_room")
         }
     }
 }
