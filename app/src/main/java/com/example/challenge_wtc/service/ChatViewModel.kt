@@ -9,17 +9,12 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel : ViewModel() {
 
-    // Pega o token do AuthManager
-    private val token = AuthManager.getToken()
+    // CORRIGIDO: Acessando a propriedade 'token' diretamente, em vez de chamar um método inexistente.
+    private val token = AuthManager.token
 
-    // Inicializa o serviço com o token
-    // Adiciona uma verificação para garantir que o token não seja nulo
     private val chatService = if (token != null) {
         ChatService(token)
     } else {
-        // Lidar com o caso em que o token é nulo.
-        // Talvez redirecionar para a tela de login ou mostrar um erro.
-        // Por enquanto, vamos lançar uma exceção para deixar claro o problema.
         throw IllegalStateException("User is not authenticated, token is null.")
     }
 
@@ -33,7 +28,6 @@ class ChatViewModel : ViewModel() {
         chatService.sendMessage(roomCode, message)
     }
 
-    // Atualizada para ser uma função suspend que chama a nova loadHistory
     fun loadHistory(roomCode: String) {
         viewModelScope.launch {
             chatService.loadHistory(roomCode)
