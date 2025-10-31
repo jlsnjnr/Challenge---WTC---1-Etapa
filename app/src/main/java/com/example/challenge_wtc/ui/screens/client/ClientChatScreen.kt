@@ -1,6 +1,6 @@
 package com.example.challenge_wtc.ui.screens.client
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,10 +46,13 @@ fun ClientChatScreen(navController: NavController, roomCode: String) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
-            items(messages) { message ->
-                val alignment = if (message.senderId == "me") Alignment.CenterEnd else Alignment.CenterStart
-                Box(modifier = Modifier.fillMaxWidth()) {
-                     Text(text = message.message ?: "", modifier = Modifier.align(alignment))
+            items(messages) { message: Message ->
+                 val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = arrangement
+                ) {
+                    Text(text = message.message ?: "")
                 }
             }
         }
@@ -62,8 +64,10 @@ fun ClientChatScreen(navController: NavController, roomCode: String) {
                 modifier = Modifier.weight(1f)
             )
             Button(onClick = {
-                viewModel.sendMessage(roomCode, text)
-                text = ""
+                 if (text.isNotBlank()) {
+                    viewModel.sendMessage(roomCode, text)
+                    text = ""
+                }
             }) {
                 Text("Send")
             }

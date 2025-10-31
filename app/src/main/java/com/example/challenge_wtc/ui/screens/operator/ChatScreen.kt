@@ -45,7 +45,7 @@ fun ChatScreen(roomCode: String) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(state = listState, modifier = Modifier.weight(1f)) {
-            items(messages) { message ->
+            items(messages) { message: Message ->
                 val arrangement = if (message.senderId == "me") Arrangement.End else Arrangement.Start
                 Row(
                     modifier = Modifier.fillMaxWidth(),
