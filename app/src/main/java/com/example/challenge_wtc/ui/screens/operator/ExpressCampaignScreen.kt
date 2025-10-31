@@ -112,7 +112,8 @@ fun ExpressCampaignScreen(navController: NavController) {
                         {
                             isLoading = false
                             Toast.makeText(context, "Campanha criada com sucesso!", Toast.LENGTH_SHORT).show()
-                            navController.popBackStack()
+                            name = ""
+                            description = ""
                         },
                         {
                             isLoading = false

@@ -43,6 +43,7 @@ import coil.compose.AsyncImage
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.challenge_wtc.auth.AuthManager
 import com.google.firebase.messaging.FirebaseMessaging
 import org.json.JSONObject
 
@@ -200,6 +201,8 @@ fun LoginScreen(navController: NavController, userType: String) {
                             Request.Method.POST, url, jsonBody,
                             { response ->
                                 isLoading = false
+                                val token = response.getString("token")
+                                AuthManager.token = token
                                 Log.d("Login Response", response.toString())
                                 if (userType == "operator") {
                                     navController.navigate("operator_main")
