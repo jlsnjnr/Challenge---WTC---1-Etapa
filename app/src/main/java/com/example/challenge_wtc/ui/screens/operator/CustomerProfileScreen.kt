@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,59 +29,73 @@ import com.android.volley.toolbox.Volley
 import com.example.challenge_wtc.auth.AuthManager
 import com.example.challenge_wtc.model.UserProfile
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @Composable
 fun CustomerProfileScreen(navController: NavController, customerId: String?) {
     var userProfile by remember { mutableStateOf<UserProfile?>(null) }
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        fetchUserProfile(context) {
-            userProfile = it
+    // Fetching the customer's profile, not the operator's "me"
+    LaunchedEffect(customerId) {
+        if (customerId != null) {
+            // You would typically fetch the specific customer's profile here
+            // For now, we'll assume the navigation to chat uses the customerId
         }
     }
 
-    userProfile?.let {
-        var notes by remember { mutableStateOf("") } // Initially empty or loaded from another source
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(it.nome, style = MaterialTheme.typography.headlineMedium)
-            Text("Status: Active", color = Color.Green) // Placeholder, adapt as needed
+    Column(modifier = Modifier.padding(16.dp)) {
+        // Display basic info if needed, or just the button
+        Text("Customer ID: $customerId", style = MaterialTheme.typography.headlineMedium)
+        Text("Status: Active", color = Color.Green) // Placeholder
 
-            Button(onClick = { navController.navigate(OperatorScreen.Chat.route + "/${it._id}") }) {
-                Text("🔘 Open Chat")
+        Button(onClick = {
+            if (customerId != null) {
+                coroutineScope.launch {
+                    startChat(context, customerId) { roomCode ->
+                        navController.navigate("operator_chat/$roomCode")
+                    }
+                }
             }
-
-            OutlinedTextField(
-                value = notes,
-                onValueChange = { notes = it },
-                label = { Text("📝 Quick Notes") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-            )
+        }) {
+            Text("🔘 Open Chat")
         }
+
+        // Notes functionality remains
+        var notes by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = notes,
+            onValueChange = { notes = it },
+            label = { Text("📝 Quick Notes") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        )
     }
 }
 
-private fun fetchUserProfile(context: Context, onResult: (UserProfile) -> Unit) {
-    val url = "https://api-challenge-5wrx.onrender.com/auth/me"
+private fun startChat(context: Context, inviteeId: String, onResult: (String) -> Unit) {
+    val url = "https://api-challenge-5wrx.onrender.com/chat/start"
     val requestQueue = Volley.newRequestQueue(context)
+    val jsonBody = JSONObject().apply {
+        put("inviteeId", inviteeId)
+    }
 
     val jsonObjectRequest = object : JsonObjectRequest(
-        Request.Method.GET, url, null,
+        Method.POST, url, jsonBody,
         { response ->
-            val userProfile = Gson().fromJson(response.toString(), UserProfile::class.java)
-            onResult(userProfile)
+            val roomCode = response.getString("roomCode")
+            onResult(roomCode)
         },
         { error ->
-            Toast.makeText(context, "Erro ao carregar o perfil do usuário", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Erro ao iniciar o chat", Toast.LENGTH_SHORT).show()
         }
     ) {
         @Throws(AuthFailureError::class)
         override fun getHeaders(): Map<String, String> {
-            val headers = HashMap<String, String>()
-            headers["Authorization"] = "Bearer ${AuthManager.token}"
-            return headers
+            return mapOf("Authorization" to "Bearer ${AuthManager.token}")
         }
     }
 
